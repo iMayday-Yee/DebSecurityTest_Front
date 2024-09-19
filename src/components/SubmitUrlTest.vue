@@ -1,5 +1,5 @@
 <template>
-    <n-space vertical size="large">
+    <n-space vertical size="large" style="width: 100%; justify-content: flex-start;">
         <n-input v-model:value="debUrl" placeholder="输入URL" />
         <n-input v-model:value="id" placeholder="输入ID" />
         <n-button @click="submitTest">提交测试</n-button>

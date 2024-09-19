@@ -2,7 +2,7 @@
   <n-message-provider>
     <n-layout>
       <n-layout-header>
-        <n-tabs v-model:value="activeTab">
+        <n-tabs v-model:value="activeTab" type="line" style="width: 100%; justify-content: flex-start;">
           <n-tab-pane name="upload" tab="上传文件测试" />
           <n-tab-pane name="url" tab="提交Url测试" />
           <n-tab-pane name="diskusage" tab="缓存管理" />
@@ -55,9 +55,16 @@ export default defineComponent({
 
 <style>
 .content {
-  padding: 20px;
   width: 100%;
+  height: calc(100vh - 60px);
+  /* 增加高度 */
   box-sizing: border-box;
-  /* 确保内边距包含在元素的总宽度和高度内 */
+  display: flex;
+  flex-direction: column;
+  /* 确保内容从上到下排列 */
+  justify-content: flex-start;
+  /* 从顶部开始对齐 */
+  align-items: flex-start;
+  /* 水平左对齐 */
 }
 </style>
