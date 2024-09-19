@@ -7,9 +7,11 @@
             <n-spin>正在检测...</n-spin>
         </div>
         <div v-if="response">
-            <n-tag :type="score >= 70 ? 'success' : 'error'">测试分数: {{ score }}</n-tag>
-            <n-tag :type="score >= 70 ? 'success' : 'error'">检测结果: {{ info }}</n-tag>
-            <n-tag>Id: {{ responseId }}</n-tag>
+            <n-space>
+                <div>ID: <n-tag type="success" round> {{ responseId }} </n-tag></div>
+                <div>测试分数: <n-tag :type="score >= 70 ? 'success' : 'error'" round> {{ score }}</n-tag></div>
+                <div>检测结果: <n-tag :type="score >= 70 ? 'success' : 'error'" round> {{ info }}</n-tag></div>
+            </n-space>
         </div>
     </n-space>
 </template>
