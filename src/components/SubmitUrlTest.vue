@@ -1,16 +1,16 @@
 <template>
     <n-space vertical size="large" style="width: 1080px; justify-content: flex-start;">
-        <n-input v-model:value="debUrl" placeholder="输入URL" style="width: 60%;" />
-        <n-input v-model:value="id" placeholder="输入ID" style="width: 60%;" />
+        <n-input v-model:value="debUrl" placeholder="输入URL" style="width: 60%" />
+        <n-input v-model:value="id" placeholder="输入ID" style="width: 60%" />
         <n-button @click="submitTest">提交测试</n-button>
         <div v-if="loading">
             <n-spin>正在检测...</n-spin>
         </div>
-        <div v-if=response>
+        <div>
             <n-space>
-                ID: <n-tag type="success" style="width: 50px,"> {{ responseId }} </n-tag>
-                测试分数: <n-tag :type="score >= 70 ? 'success' : 'error'" style="width: 50px"> {{ score }}</n-tag>
-                检测结果: <n-tag :type="score >= 70 ? 'success' : 'error'" style="width: 50px"> {{ info }}</n-tag>
+                ID: <n-tag type="success" style="min-width: 50px"> {{ responseId }} </n-tag>
+                测试分数: <n-tag :type="score >= 70 ? 'success' : 'error'" style="min-width: 50px"> {{ score }}</n-tag>
+                检测结果: <n-tag :type="score >= 70 ? 'success' : 'error'" style="min-width: 50px"> {{ info }}</n-tag>
             </n-space>
             <div style="padding: 20px;"> <n-button @click="getResult">查看结果详情</n-button></div>
         </div>
@@ -28,7 +28,9 @@ function createColumns() {
     return [
         {
             title: '检测项',
-            key: 'name'
+            key: 'name',
+            //设置列宽
+            width: 180,
         },
         {
             title: '问题类型',
@@ -36,7 +38,8 @@ function createColumns() {
         },
         {
             title: '扣除分数',
-            key: 'score'
+            key: 'score',
+            width: 90
         },
     ]
 }
