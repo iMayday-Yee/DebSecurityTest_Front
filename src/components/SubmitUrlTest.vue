@@ -6,7 +6,7 @@
         <div v-if="loading">
             <n-spin>正在检测...</n-spin>
         </div>
-        <div>
+        <div v-if=response>
             <n-space>
                 ID: <n-tag type="success" style="min-width: 50px"> {{ responseId }} </n-tag>
                 测试分数: <n-tag :type="score >= 70 ? 'success' : 'error'" style="min-width: 50px"> {{ score }}</n-tag>
