@@ -20,7 +20,7 @@ export default defineComponent({
     setup() {
         const diskUsage = ref('');
         const getDiskUsage = async () => {
-            const res = await fetch('http://127.0.0.1:8080/diskUsage', {
+            const res = await fetch('http://127.0.0.1:12345/diskUsage', {
                 method: 'GET',
             });
             const result = await res.json();
@@ -29,7 +29,7 @@ export default defineComponent({
         const msg = ref('');
         const message = useMessage();
         const cleanCache = async () => {
-            const res = await fetch('http://127.0.0.1:8080/cleanCache', {
+            const res = await fetch('http://127.0.0.1:12345/cleanCache', {
                 method: 'GET',
             });
             const result = await res.json();

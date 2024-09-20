@@ -2,7 +2,7 @@
   <n-message-provider>
     <n-layout>
       <n-layout-header>
-        <n-tabs v-model:value="activeTab" type="line" style="width: 100%; justify-content: flex-start;">
+        <n-tabs v-model:value="activeTab" type="line" style="width: 1920px; justify-content: flex-start;">
           <n-tab-pane name="upload" tab="上传文件测试" />
           <n-tab-pane name="url" tab="提交Url测试" />
           <n-tab-pane name="diskusage" tab="缓存管理" />
