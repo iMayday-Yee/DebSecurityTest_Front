@@ -1,6 +1,6 @@
 <template>
-    <n-space vertical size="large">
-        <n-input v-model:value="id" placeholder="输入ID" />
+    <n-space vertical size="large" style="padding: 5px;">
+        <n-input v-model:value="id" placeholder="输入ID" style="width: 50%;" />
         <n-upload v-model:file-list="fileList" :action="uploadUrl" />
         <n-button @click="submitTest">提交测试</n-button>
         <div v-if="response">{{ response }}</div>

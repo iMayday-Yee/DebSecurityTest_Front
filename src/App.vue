@@ -1,6 +1,6 @@
 <template>
   <n-message-provider>
-    <n-layout>
+    <n-layout class="layout">
       <n-layout-header>
         <n-tabs v-model:value="activeTab" type="line" style="width: 1920px; justify-content: flex-start;">
           <n-tab-pane name="upload" tab="上传文件测试" />
@@ -8,7 +8,7 @@
           <n-tab-pane name="diskusage" tab="缓存管理" />
         </n-tabs>
       </n-layout-header>
-      <n-layout-content class="content">
+      <n-layout-content>
         <component :is="activeTabComponent" />
       </n-layout-content>
     </n-layout>
@@ -54,17 +54,17 @@ export default defineComponent({
 </script>
 
 <style>
-.content {
-  width: 100%;
-  height: calc(100vh - 60px);
-  /* 增加高度 */
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  /* 确保内容从上到下排列 */
-  justify-content: flex-start;
-  /* 从顶部开始对齐 */
-  align-items: flex-start;
-  /* 水平左对齐 */
+.layout {
+  width: 98vw;
+  height: 98vh;
+  position: fixed;
+  top: 0;
+  /* bottom: 10px; */
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-color: white;
+  border-radius: 0px;
+  overflow: hidden;
 }
 </style>

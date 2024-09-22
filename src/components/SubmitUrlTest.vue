@@ -1,7 +1,7 @@
 <template>
-    <n-space vertical size="large" style="width: 1080px; justify-content: flex-start;">
-        <n-input v-model:value="debUrl" placeholder="输入URL" style="width: 60%" />
-        <n-input v-model:value="id" placeholder="输入ID" style="width: 60%" />
+    <n-space vertical size="large" style="justify-content: flex-start; padding: 5px;">
+        <n-input v-model:value="debUrl" placeholder="输入URL" style="width: 50%" />
+        <n-input v-model:value="id" placeholder="输入ID" style="width: 50%" />
         <n-button @click="submitTest">提交测试</n-button>
         <div v-if="loading">
             <n-spin>正在检测...</n-spin>
@@ -84,7 +84,7 @@ export default defineComponent({
             formData.append('debUrl', debUrl.value);
             formData.append('id', id.value);
             // 发送multipart/form-data请求
-            const res = await fetch('http://127.0.0.1:12345/appTestByUrl', {
+            const res = await fetch('http://1.94.103.27:12345/appTestByUrl', {
                 method: 'POST',
                 body: formData // 不需要设置Content-Type，浏览器会自动处理
             });
@@ -148,7 +148,7 @@ export default defineComponent({
         };
 
         const getResult = async () => {
-            const res = await fetch('http://127.0.0.1:12345/appTestResult?id=' + id.value);
+            const res = await fetch('http://1.94.103.27:12345/appTestResult?id=' + id.value);
             const csvText = await res.text();
             resultData.value = parseCSVToArray(csvText);
             resultData.value = resultData.value.slice(1, -1);
