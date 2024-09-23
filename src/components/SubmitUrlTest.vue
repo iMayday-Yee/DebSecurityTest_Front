@@ -84,7 +84,7 @@ export default defineComponent({
             formData.append('debUrl', debUrl.value);
             formData.append('id', id.value);
             // 发送multipart/form-data请求
-            const res = await fetch('http://1.94.103.27:12345/appTestByUrl', {
+            const res = await fetch('http://127.0.0.1:12345/appTestByUrl', {
                 method: 'POST',
                 body: formData // 不需要设置Content-Type，浏览器会自动处理
             });
@@ -148,7 +148,7 @@ export default defineComponent({
         };
 
         const getResult = async () => {
-            const res = await fetch('http://1.94.103.27:12345/appTestResult?id=' + id.value);
+            const res = await fetch('http://127.0.0.1:12345/appTestResult?id=' + id.value);
             const csvText = await res.text();
             resultData.value = parseCSVToArray(csvText);
             resultData.value = resultData.value.slice(1, -1);
