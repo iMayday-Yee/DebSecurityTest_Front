@@ -2,10 +2,7 @@
     <n-space vertical size="large" style="justify-content: flex-start; padding: 5px;">
         <n-input v-model:value="debUrl" placeholder="输入URL" style="width: 50%" />
         <n-input v-model:value="id" placeholder="输入ID" style="width: 50%" />
-        <n-button @click="submitTest">提交测试</n-button>
-        <div v-if="loading">
-            <n-spin>正在检测...</n-spin>
-        </div>
+        <n-button @click="submitTest" type="primary">提交测试</n-button>
         <div v-if=response>
             <n-space>
                 ID: <n-tag type="success" style="min-width: 50px"> {{ responseId }} </n-tag>
@@ -68,7 +65,6 @@ export default defineComponent({
         const score = ref(0);
         const info = ref('');
         const responseId = ref('');
-        const loading = ref(false);
         const showTable = ref(false);
         const message = useMessage();
         const columns = createColumns();
@@ -77,7 +73,6 @@ export default defineComponent({
         const submitTest = async () => {
             // 清空上一次的结果并显示加载状态
             response.value = false;
-            loading.value = true;
             showTable.value = false;
             // 创建FormData对象
             const formData = new FormData();
@@ -89,7 +84,6 @@ export default defineComponent({
                 body: formData // 不需要设置Content-Type，浏览器会自动处理
             });
             const result = await res.json();
-            loading.value = false; // 请求完成后隐藏加载状态
             // 检测失败时显示错误提示
             if (result.status === "ERROR") {
                 message.error('检测失败');
@@ -156,7 +150,7 @@ export default defineComponent({
             showTable.value = true;
         };
 
-        return { debUrl, id, response, score, info, responseId, loading, submitTest, getResult, resultData, showTable, columns, tableData };
+        return { debUrl, id, response, score, info, responseId, submitTest, getResult, resultData, showTable, columns, tableData };
     }
 });
 </script>
