@@ -38,7 +38,12 @@
 
       <Tasks ref="getTasksRef" @show-details="showDetails" />
 
-      <Details ref="detailsRef" v-model:show="showDetailModal" :refresh-tasks="refreshTasks" />
+      <n-modal v-model:show="showDetailModal" class="custom-card" preset="card" :style="bodyStyle" title="查看详情"
+        size="small" :bordered="false" :segmented="segmented">
+        <n-layout-content>
+          <Details ref="detailsRef" :task-id="currentTaskId" :refresh-tasks="refreshTasks" />
+        </n-layout-content>
+      </n-modal>
 
     </n-layout>
   </n-message-provider>
@@ -83,12 +88,11 @@ export default defineComponent({
 
     const showDetailModal = ref(false);
     const detailsRef = ref();
+    const currentTaskId = ref('');
 
     const showDetails = (id: string) => {
+      currentTaskId.value = id;
       showDetailModal.value = true;
-      if (detailsRef.value) {
-        detailsRef.value.getDetail(id);
-      }
     };
 
     return {
@@ -107,6 +111,7 @@ export default defineComponent({
       refreshTasks,
       showDetailModal,
       detailsRef,
+      currentTaskId,
       showDetails
     };
   }

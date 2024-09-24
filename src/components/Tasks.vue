@@ -76,7 +76,7 @@ export default defineComponent({
         NDataTable,
         NButton
     },
-    setup(props, { emit }) {
+    setup(_, { emit }) {
         const columns = createColumns({
             show(row: Task) {
                 emit('show-details', row.ID);

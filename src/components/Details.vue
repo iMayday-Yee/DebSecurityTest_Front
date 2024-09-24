@@ -1,40 +1,10 @@
 <template>
-    <n-modal v-model:show="showDetail" class="custom-card" preset="card" :style="bodyStyle" title="检测结果详情" size="small"
-        :bordered="false" :segmented="segmented">
-        <n-layout-content>
-            <n-data-table :columns="columns" :data="tableData" />
-        </n-layout-content>
-    </n-modal>
+    <n-data-table :columns="columns" :data="tableData" />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { NInput, NButton, NSpace, NDataTable } from 'naive-ui';
-
-function createColumns() {
-    return [
-        {
-            title: '检测项',
-            key: 'name',
-            width: 180,
-        },
-        {
-            title: '问题类型',
-            key: 'type'
-        },
-        {
-            title: '扣除分数',
-            key: 'score',
-            width: 90
-        },
-    ]
-}
-
-interface TableDataItem {
-    name: string;
-    type: string;
-    score: string;
-}
+import { defineComponent, ref, watch } from 'vue';
+import { NDataTable } from 'naive-ui';
 
 export default defineComponent({
     props: {
@@ -42,26 +12,41 @@ export default defineComponent({
             type: Function,
             required: true
         },
-        show: {
-            type: Boolean,
+        taskId: {
+            type: String,
             required: true
         }
     },
-    emits: ['update:show'],
     components: {
-        NInput,
-        NButton,
-        NSpace,
         NDataTable,
     },
-    setup(props, { emit }) {
-        const debUrl = ref('');
-        const id = ref('');
-        const columns = createColumns();
-        const tableData = ref<TableDataItem[]>([])
-        let resultData = ref<string[][]>([]);
+    setup(props) {
+        const columns = [
+            { title: '检测项', key: 'name', width: 180 },
+            { title: '问题类型', key: 'type' },
+            { title: '扣除分数', key: 'score', width: 90 }
+        ];
+        const tableData = ref([]);
 
-        function parseCSVToArray(csvText: string | any[]) {
+        const getDetail = async (id: string) => {
+            if (!id) return;
+            const res = await fetch('http://127.0.0.1:12345/appTestResult?id=' + id);
+            const csvText = await res.text();
+            const resultData = parseCSVToArray(csvText).slice(1, -1);
+            tableData.value = resultData.map(item => ({
+                name: item[0],
+                type: item[1],
+                score: item[2]
+            }));
+        };
+
+        watch(() => props.taskId, (newId) => {
+            if (newId) {
+                getDetail(newId);
+            }
+        }, { immediate: true });
+
+        function parseCSVToArray(csvText: string) {
             const result = [];
             let insideQuote = false;
             let currentRow = [];
@@ -89,43 +74,9 @@ export default defineComponent({
             return result;
         }
 
-        const resultJSON = () => {
-            return resultData.value.map((item) => {
-                return {
-                    name: item[0],
-                    type: item[1],
-                    score: item[2]
-                };
-            });
-        };
-
-        const getDetail = async (taskId: string) => {
-            id.value = taskId;
-            const res = await fetch('http://127.0.0.1:12345/appTestResult?id=' + id.value);
-            const csvText = await res.text();
-            resultData.value = parseCSVToArray(csvText);
-            resultData.value = resultData.value.slice(1, -1);
-            tableData.value = resultJSON();
-        };
-
         return {
-            bodyStyle: {
-                width: '600px'
-            },
-            segmented: {
-                content: 'soft',
-                footer: 'soft'
-            } as const,
-            getDetail,
-            debUrl,
-            id,
-            resultData,
             columns,
-            tableData,
-            showDetail: {
-                get: () => props.show,
-                set: (value: boolean) => emit('update:show', value)
-            }
+            tableData
         };
     }
 });
