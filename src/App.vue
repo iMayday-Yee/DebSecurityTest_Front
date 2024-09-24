@@ -36,7 +36,9 @@
         </n-layout-content>
       </n-modal>
 
-      <Tasks ref="getTasksRef" />
+      <Tasks ref="getTasksRef" @show-details="showDetails" />
+
+      <Details ref="detailsRef" v-model:show="showDetailModal" :refresh-tasks="refreshTasks" />
 
     </n-layout>
   </n-message-provider>
@@ -49,6 +51,7 @@ import UploadFileTest from './components/UploadFileTest.vue';
 import SubmitUrlTest from './components/SubmitUrlTest.vue';
 import DiskUsage from './components/DiskUsage.vue';
 import Tasks from './components/Tasks.vue';
+import Details from './components/Details.vue';
 
 export default defineComponent({
   components: {
@@ -61,7 +64,8 @@ export default defineComponent({
     UploadFileTest,
     SubmitUrlTest,
     DiskUsage,
-    Tasks
+    Tasks,
+    Details
   },
   setup() {
     const activeTab = ref('upload');
@@ -73,9 +77,20 @@ export default defineComponent({
     });
     const refreshTasks = () => {
       if (getTasksRef.value) {
-        getTasksRef.value.getTasks(); // 调用子组件的 getTasks 方法
+        getTasksRef.value.getTasks();
       }
     };
+
+    const showDetailModal = ref(false);
+    const detailsRef = ref();
+
+    const showDetails = (id: string) => {
+      showDetailModal.value = true;
+      if (detailsRef.value) {
+        detailsRef.value.getDetail(id);
+      }
+    };
+
     return {
       bodyStyle: {
         width: '600px'
@@ -89,7 +104,10 @@ export default defineComponent({
       activeTab,
       activeTabComponent,
       getTasksRef,
-      refreshTasks
+      refreshTasks,
+      showDetailModal,
+      detailsRef,
+      showDetails
     };
   }
 });

@@ -57,7 +57,7 @@ function createColumns({
                         size: 'small',
                         onClick: () => show(row)
                     },
-                    { default: () => 'Show' }
+                    { default: () => '查看详情' }
                 )
             }
         },
@@ -76,24 +76,23 @@ export default defineComponent({
         NDataTable,
         NButton
     },
-    setup() {
+    setup(props, { emit }) {
         const columns = createColumns({
             show(row: Task) {
-                alert(`Show ${row.ID}`)
+                emit('show-details', row.ID);
             }
         });
 
         const getTasks = async () => {
             const res = await fetch('http://127.0.0.1:12345/showTasks');
             const tasksJson = await res.json();
-            tasks.value = tasksJson;  // 更新 ref 的值
+            tasks.value = tasksJson;
         };
 
         onMounted(() => {
             getTasks();
         });
 
-        // 将 getTasks 暴露给父组件
         defineExpose({ getTasks });
 
         return {

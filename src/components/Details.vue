@@ -1,5 +1,4 @@
 <template>
-
     <n-modal v-model:show="showDetail" class="custom-card" preset="card" :style="bodyStyle" title="检测结果详情" size="small"
         :bordered="false" :segmented="segmented">
         <n-layout-content>
@@ -17,7 +16,6 @@ function createColumns() {
         {
             title: '检测项',
             key: 'name',
-            //设置列宽
             width: 180,
         },
         {
@@ -43,23 +41,26 @@ export default defineComponent({
         refreshTasks: {
             type: Function,
             required: true
+        },
+        show: {
+            type: Boolean,
+            required: true
         }
     },
+    emits: ['update:show'],
     components: {
         NInput,
         NButton,
         NSpace,
         NDataTable,
     },
-    setup() {
+    setup(props, { emit }) {
         const debUrl = ref('');
         const id = ref('');
         const columns = createColumns();
         const tableData = ref<TableDataItem[]>([])
-        const showDetail = ref(false);
         let resultData = ref<string[][]>([]);
 
-        // 解析CSV文本为二维数组
         function parseCSVToArray(csvText: string | any[]) {
             const result = [];
             let insideQuote = false;
@@ -68,24 +69,19 @@ export default defineComponent({
             for (let i = 0; i < csvText.length; i++) {
                 const char = csvText[i];
                 if (char === '"') {
-                    // 遇到引号时，切换 insideQuote 状态
                     insideQuote = !insideQuote;
                 } else if (char === ',' && !insideQuote) {
-                    // 在引号外遇到逗号，结束当前单元格并推入当前行
                     currentRow.push(currentCell);
                     currentCell = '';
                 } else if (char === '\n' && !insideQuote) {
-                    // 在引号外遇到换行符，结束当前行并推入结果数组
                     currentRow.push(currentCell);
                     result.push(currentRow);
                     currentRow = [];
                     currentCell = '';
                 } else {
-                    // 其他字符正常加入当前单元格
                     currentCell += char;
                 }
             }
-            // 如果最后一行没有以换行符结束，手动结束最后一行
             if (currentCell || currentRow.length > 0) {
                 currentRow.push(currentCell);
                 result.push(currentRow);
@@ -103,12 +99,13 @@ export default defineComponent({
             });
         };
 
-        const getDetail = async () => {
+        const getDetail = async (taskId: string) => {
+            id.value = taskId;
             const res = await fetch('http://127.0.0.1:12345/appTestResult?id=' + id.value);
             const csvText = await res.text();
             resultData.value = parseCSVToArray(csvText);
             resultData.value = resultData.value.slice(1, -1);
-            tableData.value = resultJSON();  // 更新 ref 的值
+            tableData.value = resultJSON();
         };
 
         return {
@@ -119,7 +116,16 @@ export default defineComponent({
                 content: 'soft',
                 footer: 'soft'
             } as const,
-            showDetail, getDetail, debUrl, id, resultData, columns, tableData
+            getDetail,
+            debUrl,
+            id,
+            resultData,
+            columns,
+            tableData,
+            showDetail: {
+                get: () => props.show,
+                set: (value: boolean) => emit('update:show', value)
+            }
         };
     }
 });
