@@ -1,6 +1,7 @@
 <template>
   <n-message-provider>
     <n-layout class="layout">
+
       <div class="button-row">
         <div class="button-group-left">
           <n-button @click="showAddTask = true" class="button" type="primary">
@@ -35,7 +36,8 @@
         </n-layout-content>
       </n-modal>
 
-      <GetTasks ref="getTasksRef" />
+      <Tasks ref="getTasksRef" />
+
     </n-layout>
   </n-message-provider>
 </template>
@@ -46,7 +48,7 @@ import { NLayout, NMessageProvider, NButton, NModal, NTabs, NTabPane } from 'nai
 import UploadFileTest from './components/UploadFileTest.vue';
 import SubmitUrlTest from './components/SubmitUrlTest.vue';
 import DiskUsage from './components/DiskUsage.vue';
-import GetTasks from './components/GetTasks.vue';
+import Tasks from './components/Tasks.vue';
 
 export default defineComponent({
   components: {
@@ -59,24 +61,21 @@ export default defineComponent({
     UploadFileTest,
     SubmitUrlTest,
     DiskUsage,
-    GetTasks
+    Tasks
   },
   setup() {
     const activeTab = ref('upload');
     const showAddTask = ref(false);
     const showDiskUsageManagement = ref(false);
     const getTasksRef = ref();
-
     const activeTabComponent = computed(() => {
       return activeTab.value === 'upload' ? UploadFileTest : SubmitUrlTest;
     });
-
     const refreshTasks = () => {
       if (getTasksRef.value) {
         getTasksRef.value.getTasks(); // 调用子组件的 getTasks 方法
       }
     };
-
     return {
       bodyStyle: {
         width: '600px'
@@ -111,7 +110,8 @@ export default defineComponent({
 }
 
 .button {
-  margin: 10px 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .button-row {

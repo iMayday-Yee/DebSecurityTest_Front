@@ -1,9 +1,9 @@
 <template>
     <n-space vertical size="large" style="padding: 5px;">
-        <n-flex>
+        <n-flex style="margin-bottom: 10px; margin-top: 5px;">
             当前缓存大小: {{ diskUsage }}
         </n-flex>
-        <n-button @click="cleanCache" type="primary" ghost>清除缓存</n-button>
+        <n-button @click="cleanCache" type="primary" ghost style="margin-bottom: 10px;">清除缓存</n-button>
     </n-space>
 </template>
 
@@ -41,9 +41,9 @@ export default defineComponent({
             const result = await res.json();
             msg.value = result.status;
             if (msg.value === 'OK') {
-                message.success('清除成功');
+                message.success('清除缓存成功');
             } else {
-                message.error('清除失败');
+                message.error('清除缓存失败');
             }
             getDiskUsage();
             props.refreshTasks();

@@ -1,14 +1,28 @@
 <template>
     <n-layout>
-        <n-data-table :columns="columns" :data="tasks" style="margin: 5px;" />
+        <n-data-table :columns="columns" :data="tasks" style="margin-top: 5px;" />
     </n-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, defineExpose } from 'vue';
-import { NLayout, NDataTable } from 'naive-ui';
+import { defineComponent, ref, onMounted, defineExpose, h } from 'vue';
+import { NLayout, NDataTable, NButton } from 'naive-ui';
+import type { DataTableColumns } from 'naive-ui'
 
-function createColumns() {
+interface Task {
+    ID: string;
+    Status: string;
+    Score: number;
+    Info: string;
+    ResultFile: string;
+    Error: string;
+}
+
+function createColumns({
+    show
+}: {
+    show: (row: Task) => void
+}): DataTableColumns<Task> {
     return [
         {
             title: 'ID',
@@ -33,7 +47,19 @@ function createColumns() {
         {
             title: '结果详情',
             key: 'ResultFile',
-            width: 400
+            width: 400,
+            render(row) {
+                return h(
+                    NButton,
+                    {
+                        strong: true,
+                        tertiary: true,
+                        size: 'small',
+                        onClick: () => show(row)
+                    },
+                    { default: () => 'Show' }
+                )
+            }
         },
         {
             title: '错误',
@@ -42,24 +68,20 @@ function createColumns() {
     ];
 }
 
-interface Task {
-    ID: string;
-    Status: string;
-    Score: number;
-    Info: string;
-    ResultFile: string;
-    Error: string;
-}
-
 const tasks = ref<Task[]>([]);
 
 export default defineComponent({
     components: {
         NLayout,
         NDataTable,
+        NButton
     },
     setup() {
-        const columns = createColumns();
+        const columns = createColumns({
+            show(row: Task) {
+                alert(`Show ${row.ID}`)
+            }
+        });
 
         const getTasks = async () => {
             const res = await fetch('http://127.0.0.1:12345/showTasks');
