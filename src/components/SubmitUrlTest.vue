@@ -24,7 +24,7 @@ export default defineComponent({
         NSpace,
         NDataTable,
     },
-    setup(props) {
+    setup(props, { emit }) {
         const debUrl = ref('');
         const id = ref('');
         const message = useMessage();
@@ -47,6 +47,7 @@ export default defineComponent({
                 message.success('添加任务成功');
             }
             props.refreshTasks();
+            emit('close'); // 发射关闭事件
         };
 
         return { debUrl, id, submitTest };

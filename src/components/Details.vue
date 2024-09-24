@@ -26,7 +26,7 @@ export default defineComponent({
             { title: '问题类型', key: 'type' },
             { title: '扣除分数', key: 'score', width: 90 }
         ];
-        const tableData = ref([]);
+        const tableData = ref<{ name: string; type: string; score: string; }[]>([]);
 
         const getDetail = async (id: string) => {
             if (!id) return;

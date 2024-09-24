@@ -25,7 +25,7 @@
           </n-tabs>
         </n-layout-header>
         <n-layout-content>
-          <component :is="activeTabComponent" :refresh-tasks="refreshTasks" />
+          <component :is="activeTabComponent" :refresh-tasks="refreshTasks" @close="showAddTask = false" />
         </n-layout-content>
       </n-modal>
 
