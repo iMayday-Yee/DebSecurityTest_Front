@@ -1,16 +1,8 @@
 <template>
     <n-space vertical size="large" style="justify-content: flex-start; padding: 5px;">
-        <n-input v-model:value="debUrl" placeholder="输入URL" style="width: 50%" />
-        <n-input v-model:value="id" placeholder="输入ID" style="width: 50%" />
-        <n-button @click="submitTest" type="primary">提交测试</n-button>
-        <div v-if=response>
-            <n-space>
-                ID: <n-tag type="success" style="min-width: 50px"> {{ responseId }} </n-tag>
-                测试分数: <n-tag :type="score >= 70 ? 'success' : 'error'" style="min-width: 50px"> {{ score }}</n-tag>
-                检测结果: <n-tag :type="score >= 70 ? 'success' : 'error'" style="min-width: 50px"> {{ info }}</n-tag>
-            </n-space>
-            <div style="padding: 20px;"> <n-button @click="getResult">查看结果详情</n-button></div>
-        </div>
+        <n-input v-model:value="debUrl" placeholder="输入URL" style="width: 100%" />
+        <n-input v-model:value="id" placeholder="输入ID" style="width: 100%" />
+        <n-button @click="submitTest" type="primary" ghost>提交测试</n-button>
         <div>
             <n-data-table v-if="showTable" :columns="columns" :data="tableData" />
         </div>
@@ -19,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { NInput, NButton, NSpace, NTag, NSpin, useMessage, NDataTable } from 'naive-ui';
+import { NInput, NButton, NSpace, useMessage, NDataTable } from 'naive-ui';
 
 function createColumns() {
     return [
@@ -47,32 +39,29 @@ interface TableDataItem {
     score: string;
 }
 
-const tableData = ref<TableDataItem[]>()
-
 export default defineComponent({
+    props: {
+        refreshTasks: {
+            type: Function,
+            required: true
+        }
+    },
     components: {
         NInput,
         NButton,
         NSpace,
-        NTag,
-        NSpin,
-        NDataTable
+        NDataTable,
     },
-    setup() {
+    setup(props) {
         const debUrl = ref('');
         const id = ref('');
-        const response = ref(false);
-        const score = ref(0);
-        const info = ref('');
-        const responseId = ref('');
         const showTable = ref(false);
         const message = useMessage();
         const columns = createColumns();
-        // const tableData = ref([]); // 将 tableData 改为 ref
+        const tableData = ref<TableDataItem[]>([])
 
         const submitTest = async () => {
             // 清空上一次的结果并显示加载状态
-            response.value = false;
             showTable.value = false;
             // 创建FormData对象
             const formData = new FormData();
@@ -89,10 +78,7 @@ export default defineComponent({
                 message.error('检测失败');
                 return;
             }
-            score.value = result.data.score;
-            info.value = result.data.info;
-            responseId.value = result.data.id;
-            response.value = true;
+            props.refreshTasks();
         };
 
         let resultData = ref<string[][]>([]);
@@ -150,7 +136,7 @@ export default defineComponent({
             showTable.value = true;
         };
 
-        return { debUrl, id, response, score, info, responseId, submitTest, getResult, resultData, showTable, columns, tableData };
+        return { debUrl, id, submitTest, getResult, resultData, showTable, columns, tableData };
     }
 });
 </script>

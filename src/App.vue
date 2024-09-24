@@ -11,7 +11,7 @@
           </n-button>
         </div>
         <div class="button-group-right">
-          <n-button @click="getTasks" class="button" type="primary" ghost>刷新任务列表</n-button>
+          <n-button @click="refreshTasks" class="button" type="primary" ghost>刷新任务列表</n-button>
         </div>
       </div>
 
@@ -24,113 +24,59 @@
           </n-tabs>
         </n-layout-header>
         <n-layout-content>
-          <component :is="activeTabComponent" />
+          <component :is="activeTabComponent" :refresh-tasks="refreshTasks" />
         </n-layout-content>
       </n-modal>
 
       <n-modal v-model:show="showDiskUsageManagement" class="custom-card" preset="card" :style="bodyStyle" title="缓存管理"
         size="small" :bordered="false" :segmented="segmented">
         <n-layout-content>
-          <DiskUsage />
+          <DiskUsage :refresh-tasks="refreshTasks" />
         </n-layout-content>
       </n-modal>
 
-      <n-layout>
-        <n-data-table :columns="columns" :data="tasks" style="margin: 5px;" />
-      </n-layout>
+      <GetTasks ref="getTasksRef" />
     </n-layout>
   </n-message-provider>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
-import { NLayout, NLayoutHeader, NLayoutContent, NTabs, NTabPane, NMessageProvider, NDataTable, NButton, NModal } from 'naive-ui';
+import { defineComponent, ref, computed } from 'vue';
+import { NLayout, NMessageProvider, NButton, NModal, NTabs, NTabPane } from 'naive-ui';
 import UploadFileTest from './components/UploadFileTest.vue';
 import SubmitUrlTest from './components/SubmitUrlTest.vue';
 import DiskUsage from './components/DiskUsage.vue';
-
-function createColumns() {
-  return [
-    {
-      title: 'ID',
-      key: 'ID',
-      width: 200
-    },
-    {
-      title: '状态',
-      key: 'Status',
-      width: 250
-    },
-    {
-      title: '分数',
-      key: 'Score',
-      width: 180
-    },
-    {
-      title: '是否通过',
-      key: 'Info',
-      width: 300
-    },
-    {
-      title: '结果详情',
-      key: 'ResultFile',
-      width: 400
-    },
-    {
-      title: '错误',
-      key: 'Error',
-    },
-  ]
-}
-
-interface Task {
-  ID: string;
-  Status: string;
-  Score: number;
-  Info: string;
-  ResultFile: string;
-  Error: string;
-}
-
-const tasks = ref<Task[]>()
-
+import GetTasks from './components/GetTasks.vue';
 
 export default defineComponent({
   components: {
     NLayout,
-    NLayoutHeader,
-    NLayoutContent,
+    NMessageProvider,
+    NButton,
+    NModal,
     NTabs,
     NTabPane,
-    NMessageProvider,
     UploadFileTest,
     SubmitUrlTest,
     DiskUsage,
-    NDataTable,
-    NButton,
-    NModal
+    GetTasks
   },
   setup() {
     const activeTab = ref('upload');
-    const columns = createColumns();
+    const showAddTask = ref(false);
+    const showDiskUsageManagement = ref(false);
+    const getTasksRef = ref();
+
     const activeTabComponent = computed(() => {
-      switch (activeTab.value) {
-        case 'upload':
-          return UploadFileTest;
-        case 'url':
-          return SubmitUrlTest;
-        default:
-          return UploadFileTest;
+      return activeTab.value === 'upload' ? UploadFileTest : SubmitUrlTest;
+    });
+
+    const refreshTasks = () => {
+      if (getTasksRef.value) {
+        getTasksRef.value.getTasks(); // 调用子组件的 getTasks 方法
       }
-    });
-    const getTasks = async () => {
-      const res = await fetch('http://127.0.0.1:12345/showTasks');
-      const tasksJson = await res.json();
-      tasks.value = tasksJson;  // 更新 ref 的值
     };
-    onMounted(() => {
-      getTasks();
-    });
+
     return {
       bodyStyle: {
         width: '600px'
@@ -139,9 +85,12 @@ export default defineComponent({
         content: 'soft',
         footer: 'soft'
       } as const,
-      showAddTask: ref(false),
-      showDiskUsageManagement: ref(false),
-      activeTab, activeTabComponent, columns, getTasks, tasks
+      showAddTask,
+      showDiskUsageManagement,
+      activeTab,
+      activeTabComponent,
+      getTasksRef,
+      refreshTasks
     };
   }
 });
