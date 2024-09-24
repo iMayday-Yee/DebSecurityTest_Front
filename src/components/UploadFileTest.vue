@@ -1,9 +1,9 @@
 <template>
-    <n-space vertical size="large" style="padding: 5px;">
-        <n-input v-model:value="id" placeholder="输入ID" style="width: 50%;" />
+    <n-space vertical size="large" style="justify-content: flex-start; padding: 5px; margin-top: 5px">
+        <n-input v-model:value="id" placeholder="输入ID" style="width: 98%;" />
         <n-upload v-model:file-list="fileList" :action="uploadUrl" />
-        <n-button @click="submitTest">提交测试</n-button>
-        <div v-if="response">{{ response }}</div>
+        <n-button @click="submitTest" type="primary" ghost
+            style="margin-bottom: 10px; margin-top: 10px;">提交测试</n-button>
     </n-space>
 </template>
 

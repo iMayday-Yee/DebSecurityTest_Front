@@ -6,8 +6,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, defineExpose, h } from 'vue';
-import { NLayout, NDataTable, NButton } from 'naive-ui';
-import type { DataTableColumns } from 'naive-ui'
+import { NLayout, NDataTable, NButton, NTag } from 'naive-ui';
+import { DataTableColumns } from 'naive-ui'
 
 interface Task {
     ID: string;
@@ -27,28 +27,50 @@ function createColumns({
         {
             title: 'ID',
             key: 'ID',
-            width: 200
+            width: '12%',
         },
         {
             title: '状态',
             key: 'Status',
-            width: 250
+            width: '15%',
+            render(row) {
+                let colorType: 'default' | 'info' | 'error' | 'primary' | 'success' | 'warning' = 'info'; // 默认颜色
+                if (row.Status === 'Running') colorType = 'info';
+                else if (row.Status === 'Finished') colorType = 'success';
+                else if (row.Status === 'Error') colorType = 'error';
+                return h(NTag, { bordered: false, type: colorType }, { default: () => row.Status });
+            }
         },
         {
             title: '分数',
             key: 'Score',
-            width: 180
+            width: '10%',
+            render(row) {
+                if (row.Status !== 'Finished') return null;
+                let colorType: 'default' | 'info' | 'error' | 'primary' | 'success' | 'warning' = 'success'; // 默认颜色
+                if (row.Score >= 70) colorType = 'success';
+                else colorType = 'error';
+                return h(NTag, { bordered: false, type: colorType }, { default: () => row.Score });
+            }
         },
         {
             title: '是否通过',
             key: 'Info',
-            width: 300
+            width: '15%',
+            render(row) {
+                if (row.Status !== 'Finished') return null;
+                let colorType: 'default' | 'info' | 'error' | 'primary' | 'success' | 'warning' = 'success'; // 默认颜色
+                if (row.Score >= 70) colorType = 'success';
+                else colorType = 'error';
+                return h(NTag, { bordered: false, type: colorType }, { default: () => row.Info });
+            }
         },
         {
             title: '结果详情',
             key: 'ResultFile',
-            width: 400,
+            width: '20%',
             render(row) {
+                if (row.Status !== 'Finished') return null;
                 return h(
                     NButton,
                     {
@@ -62,7 +84,7 @@ function createColumns({
             }
         },
         {
-            title: '错误',
+            title: '错误（如果有）',
             key: 'Error',
         },
     ];
@@ -74,7 +96,8 @@ export default defineComponent({
     components: {
         NLayout,
         NDataTable,
-        NButton
+        NButton,
+        NTag
     },
     setup(_, { emit }) {
         const columns = createColumns({

@@ -1,7 +1,7 @@
 <template>
     <n-space vertical size="large" style="justify-content: flex-start; padding: 5px; margin-top: 5px">
-        <n-input v-model:value="debUrl" placeholder="输入URL" style="width: 100%" />
-        <n-input v-model:value="id" placeholder="输入ID" style="width: 100%" />
+        <n-input v-model:value="debUrl" placeholder="输入URL" style="width: 98%" />
+        <n-input v-model:value="id" placeholder="输入ID" style="width: 98%" />
         <n-button @click="submitTest" type="primary" ghost
             style="margin-bottom: 10px; margin-top: 10px;">提交测试</n-button>
     </n-space>
