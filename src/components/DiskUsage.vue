@@ -23,7 +23,7 @@ export default defineComponent({
         NButton,
         NFlex
     },
-    setup(props) {
+    setup(props, { emit }) {
         const diskUsage = ref('');
         const getDiskUsage = async () => {
             const res = await fetch('http://127.0.0.1:12345/diskUsage', {
@@ -47,6 +47,7 @@ export default defineComponent({
             }
             getDiskUsage();
             props.refreshTasks();
+            emit('close'); // 发射关闭事件
         };
 
         // 在组件加载时调用 getDiskUsage 方法

@@ -32,7 +32,7 @@
       <n-modal v-model:show="showDiskUsageManagement" class="custom-card" preset="card" :style="bodyStyle" title="缓存管理"
         size="small" :bordered="false" :segmented="segmented">
         <n-layout-content>
-          <DiskUsage :refresh-tasks="refreshTasks" />
+          <DiskUsage :refresh-tasks="refreshTasks" @close="showDiskUsageManagement = false" />
         </n-layout-content>
       </n-modal>
 
