@@ -21,7 +21,7 @@
         <n-layout-header>
           <n-tabs v-model:value="activeTab" type="line" style="justify-content: flex-start;">
             <n-tab-pane name="upload" tab="上传文件测试" />
-            <n-tab-pane name="url" tab="提交Url测试" />
+            <n-tab-pane name="url" tab="提交URL测试" />
           </n-tabs>
         </n-layout-header>
         <n-layout-content>

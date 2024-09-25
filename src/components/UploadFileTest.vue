@@ -1,7 +1,13 @@
 <template>
     <n-space vertical size="large" style="justify-content: flex-start; padding: 5px; margin-top: 5px">
+        <n-upload ref="upload" multiple directory-dnd :max="1" :on-change="handleChange">
+            <n-upload-dragger>
+                <n-text style="font-size: 16px">
+                    点击或者拖动文件到该区域来上传
+                </n-text>
+            </n-upload-dragger>
+        </n-upload>
         <n-input v-model:value="id" placeholder="输入ID" style="width: 98%;" />
-        <n-upload v-model:file-list="fileList" :action="uploadUrl" />
         <n-button @click="submitTest" type="primary" ghost
             style="margin-bottom: 10px; margin-top: 10px;">提交测试</n-button>
     </n-space>
@@ -9,38 +15,71 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { NInput, NUpload, NButton, NSpace } from 'naive-ui';
+import { NInput, NUpload, NButton, NSpace, useMessage, NText, NUploadDragger } from 'naive-ui';
+import type { UploadFileInfo } from 'naive-ui';
 
 export default defineComponent({
+    props: {
+        refreshTasks: {
+            type: Function,
+            required: true
+        }
+    },
     components: {
         NInput,
         NUpload,
         NButton,
-        NSpace
+        NSpace,
+        NText,
+        NUploadDragger
     },
-    setup() {
+    setup(props, { emit }) {
         const id = ref('');
-        const fileList = ref([]);
-        const response = ref('');
-        const uploadUrl = 'your-upload-url'; // 替换为你的上传接口
+        const fileList = ref<UploadFileInfo[]>([]);
+        const message = useMessage();
+        const upload = ref<typeof NUpload | null>(null);
 
-        const submitTest = async () => {
-            // 处理文件上传和ID提交逻辑
-            // 假设后端接口为 /api/upload
-            const formData = new FormData();
-            formData.append('id', id.value);
-            if (fileList.value.length > 0) {
-                formData.append('file', fileList.value[0].file);
-            }
-
-            const res = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData
-            });
-            response.value = await res.text();
+        const handleChange = (data: { fileList: UploadFileInfo[] }) => {
+            fileList.value = data.fileList;
         };
 
-        return { id, fileList, response, submitTest };
+        const submitTest = async () => {
+            if (fileList.value.length === 0) {
+                message.error('请选择一个文件上传');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('id', id.value);
+            formData.append('debFile', fileList.value[0].file as File);
+
+            try {
+                const res = await fetch('http://127.0.0.1:12345/appTestByFile', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await res.json();
+
+                if (result.status === "ERROR") {
+                    message.error('添加任务失败');
+                } else {
+                    message.success('添加任务成功');
+                    props.refreshTasks();
+                    emit('close');
+                    // 清空文件列表和ID输入
+                    fileList.value = [];
+                    id.value = '';
+                    if (upload.value) {
+                        upload.value.clear();
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                message.error('提交失败，请稍后重试');
+            }
+        };
+
+        return { id, fileList, submitTest, upload, handleChange };
     }
 });
 </script>

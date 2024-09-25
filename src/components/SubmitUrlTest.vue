@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { NInput, NButton, NSpace, useMessage, NDataTable } from 'naive-ui';
+import { NInput, NButton, NSpace, useMessage } from 'naive-ui';
 
 export default defineComponent({
     props: {
@@ -22,7 +22,6 @@ export default defineComponent({
         NInput,
         NButton,
         NSpace,
-        NDataTable,
     },
     setup(props, { emit }) {
         const debUrl = ref('');
