@@ -5,6 +5,7 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
 import { NDataTable } from 'naive-ui';
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 export default defineComponent({
     props: {
@@ -30,7 +31,7 @@ export default defineComponent({
 
         const getDetail = async (id: string) => {
             if (!id) return;
-            const res = await fetch('http://127.0.0.1:12345/appTestResult?id=' + id);
+            const res = await fetch(`${apiUrl}/appTestResult?id=` + id);
             const csvText = await res.text();
             const resultData = parseCSVToArray(csvText).slice(1, -1);
             tableData.value = resultData.map(item => ({

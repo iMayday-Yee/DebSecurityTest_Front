@@ -17,6 +17,7 @@
 import { defineComponent, ref } from 'vue';
 import { NInput, NUpload, NButton, NSpace, useMessage, NText, NUploadDragger } from 'naive-ui';
 import type { UploadFileInfo } from 'naive-ui';
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 export default defineComponent({
     props: {
@@ -54,7 +55,7 @@ export default defineComponent({
             formData.append('debFile', fileList.value[0].file as File);
 
             try {
-                const res = await fetch('http://127.0.0.1:12345/appTestByFile', {
+                const res = await fetch(`${apiUrl}/appTestByFile`, {
                     method: 'POST',
                     body: formData
                 });

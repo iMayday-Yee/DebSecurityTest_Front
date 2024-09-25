@@ -8,6 +8,7 @@
 import { defineComponent, ref, onMounted, defineExpose, h } from 'vue';
 import { NLayout, NDataTable, NButton, NTag } from 'naive-ui';
 import { DataTableColumns } from 'naive-ui'
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 interface Task {
     ID: string;
@@ -107,7 +108,7 @@ export default defineComponent({
         });
 
         const getTasks = async () => {
-            const res = await fetch('http://127.0.0.1:12345/showTasks');
+            const res = await fetch(`${apiUrl}/showTasks`);
             const tasksJson = await res.json();
             tasks.value = tasksJson;
         };

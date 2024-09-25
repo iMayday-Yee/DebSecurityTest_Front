@@ -10,6 +10,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { NInput, NButton, NSpace, useMessage } from 'naive-ui';
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 export default defineComponent({
     props: {
@@ -33,7 +34,7 @@ export default defineComponent({
             formData.append('debUrl', debUrl.value);
             formData.append('id', id.value);
             // 发送multipart/form-data请求
-            const res = await fetch('http://127.0.0.1:12345/appTestByUrl', {
+            const res = await fetch(`${apiUrl}/appTestByUrl`, {
                 method: 'POST',
                 body: formData // 不需要设置Content-Type，浏览器会自动处理
             });

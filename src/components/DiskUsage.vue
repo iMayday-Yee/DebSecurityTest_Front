@@ -10,6 +10,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import { NButton, NSpace, NFlex, useMessage } from 'naive-ui';
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 export default defineComponent({
     props: {
@@ -26,7 +27,7 @@ export default defineComponent({
     setup(props, { emit }) {
         const diskUsage = ref('');
         const getDiskUsage = async () => {
-            const res = await fetch('http://127.0.0.1:12345/diskUsage', {
+            const res = await fetch(`${apiUrl}/diskUsage`, {
                 method: 'GET',
             });
             const result = await res.json();
@@ -35,7 +36,7 @@ export default defineComponent({
         const msg = ref('');
         const message = useMessage();
         const cleanCache = async () => {
-            const res = await fetch('http://127.0.0.1:12345/cleanCache', {
+            const res = await fetch(`${apiUrl}/cleanCache`, {
                 method: 'GET',
             });
             const result = await res.json();
