@@ -23,9 +23,9 @@ export default defineComponent({
     },
     setup(props) {
         const columns = [
-            { title: '检测项', key: 'name', width: 180 },
+            { title: '检测项', key: 'name', width: 140 },
             { title: '问题类型', key: 'type' },
-            { title: '扣除分数', key: 'score', width: 90 }
+            { title: '扣除分数', key: 'score', width: 85 }
         ];
         const tableData = ref<{ name: string; type: string; score: string; }[]>([]);
 
@@ -82,3 +82,10 @@ export default defineComponent({
     }
 });
 </script>
+
+<style>
+/* 为了让表格内容换行 */
+.n-data-table .n-data-table-td {
+    white-space: pre-wrap;
+}
+</style>
